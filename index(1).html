@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/header.css">
+    <!--<link rel="stylesheet" href="css/style.css">-->
+    <script src="js/jquery-2.2.1.min.js"></script>
+    <script src="js/jquery-1.2.pack.js"></script>
+</head>
+<body>
+<div class="header">
+    <ul class="shangpinxinxi">
+    </ul>
+    <ul class="ul1">
+        <li class="slot">
+            <img src="img/qhb.png" alt="">
+            <span>1</span>
+            <p>123123</p>
+        </li>
+        <li class="slot">
+            <img src="img/qhb.png" alt="">
+            <span>2</span>
+            <p>123123</p>
+        </li>
+        <li class="slot">
+            <img src="img/qhb.png" alt="">
+            <span>3</span>
+            <p>123123</p>
+        </li>
+        <li class="slot">
+            <img src="img/qhb.png" alt="">
+            <span>4</span>
+            <p>123123</p>
+        </li>
+        <li class="slot">
+            <img src="img/qhb.png" alt="">
+            <span>5</span>
+            <p>123123</p>
+        </li>
+        <li class="slot">
+            <img src="img/qhb.png" alt="">
+            <span>6</span>
+            <p>123123</p>
+        </li>
+    </ul>
+    <!--   点击按钮   -->
+    <div class="kaishi"></div>
+    <div class="luck-user">
+        <ul class="luck-user-list">
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+            <li>
+                <div><img src="" alt="">img</div>
+                <div>name</div>
+                <div>bumen</div>
+            </li>
+
+        </ul>
+    </div>
+    <p class="people">6000</p>
+    <input type="text" class="NumPeople" value="1">
+    <div class="subNum"></div>
+    <div class="addNum"></div>
+</div>
+</body>
+<script src="./js/iscroll.js"></script>
+<script>
+    let luckUser = document.querySelector('.luck-user');
+    var myScroll = new IScroll('luckUser', {
+        scrollbars: 'custom'
+    });
+
+    let json; // 存放获取数据
+    let jsonNum // 数据长度
+    let g_winnerList;
+    let prizeName = '';
+    // 随机数
+    function getNumbei(n, m) {
+        var random = Math.floor(Math.random() * (m - n + 1) + n);
+        return random;
+    }
+
+    // 请求中奖列表
+    function getWinList(number,prizeId) {
+        if(number==1){
+            number = Number.parseInt($(".NumPeople").val());
+        }
+        $.post('http://47.93.199.20:8081/BlockT/lottery',
+            {num: number, prizeId},
+            function (res) {
+                let data = JSON.parse(res);
+                console.log(data)
+                console.log(data.winningList);
+                g_winnerList = data.winningList;
+                console.log(g_winnerList)
+                varRoundList = getRoundList(data.winningList,{},200);
+                console.log(varRoundList)
+                json = varRoundList;
+                jsonNum = varRoundList.length - 1;
+            })
+    }
+
+    // 动画函数
+    let timer1;//定时器
+    let str = '';
+    let winStr = '';
+    let var_round_begin = 0;
+    function getData() {
+        window.clearInterval(timer1);
+        var_round_begin = 0;
+        timer1 = window.setInterval(function () {
+                let pre_round_begin = var_round_begin;
+                for (let i = 0; i < 6 && var_round_begin < json.length; i++,var_round_begin++) {  // 随机显示 6个
+                    str += `<li class="slot"><img src="${json[var_round_begin].headImg}" alt=""><span>${json[var_round_begin].name}</span><p>${json[var_round_begin].department}</p></li>`
+                    insertPos.forEach( function(element, index) {
+                        if(element == var_round_begin){
+                            alert("恭喜 "+g_winnerList[index].name+"中奖");
+                            //  g_winnerList[index]  中奖者信息
+                            // prizeName 几等奖
+                                winStr+=`<div><img src="" alt="">img</div><div>name</div><div>bumen</div>`;
+                                $
+                               $("div").animate({
+                                   left:'300px',
+                                   top:'300px',
+                                   height:'-=0px',
+                                   width:'-=00px'
+                               });
+
+                        }
+                    });
+                }
+                $('.ul1')[0].innerHTML = '';
+                $('.ul1')[0].innerHTML = str; // 页面中显示
+                str = ''
+            //}
+            if(var_round_begin >= json.length){
+                window.clearInterval(timer1);    
+            }
+            // for (let i = 0; i < 6; i++) {  // 随机显示 6个
+            //     let number = getNumbei(0, jsonNum);
+            //     str += `<li class="slot"><img src="${json[number].headImg}" alt=""><span>${json[number].name}</span><p>${json[number].department}</p></li>`
+            // }
+            // $('.ul1')[0].innerHTML = '';
+            // $('.ul1')[0].innerHTML = str; // 页面中显示
+            //str = ''
+        }, 200)//  200 是切换动画时间
+    }
+
+    // 开始 按钮  点击触发动画函数  必须
+    $(".kaishi").click(function () {
+        getWinList(number,prizeId=1);
+        getData();
+    })
+    // 清除动画  必须触发
+    function stop() {
+        window.clearInterval(timer1);
+    }
+    // 奖品详情
+    $.ajax({
+        type: "GET",
+        url: "http://47.93.199.20:8081/BlockT/LotteryInformation",
+        data: {
+            "prizeId": "1"
+        },
+        dataType: "json",
+        success: function (data) {
+            console.log(data)
+            var pp = data.prize
+            prizeName = pp.id
+            console.log(prizeName)
+            // console.log(pp)
+            var str = ``
+            str += `<li><p>${pp.prizeGrade}</p><img src="${pp.prizeImg}" alt=""><p>${pp.prizeName}</p></li>`
+            $(".shangpinxinxi").html(str)
+        }
+    });
+
+    let number = 1;
+    $(".addNum").click(function () {
+        var input = $(".NumPeople");
+        let num = Number.parseInt(input.val());
+        num-=1;
+        number = num
+        input.val(num)
+        if (Number.parseInt(input.val()) == 0) {
+            alert("人数不能小于0")
+            input.val(1)
+        }
+    })
+
+    $(".subNum").click(function () {
+        var input = $(".NumPeople");
+        let num = Number.parseInt(input.val());
+        num+=1;
+        number = num
+        input.val(num)
+    })
+
+</script>
+<script type="text/javascript">
+    // 抽奖名单维护代码
+    startIndex = localStorage.getItem("startIndex");
+    if( startIndex == null ){
+        startIndex = 0;
+    }
+    pageSize=100;
+    insertPos = [];
+    // 备选名单
+    varTimer = window.setInterval(function function_name (argument) {
+        // body... 
+         $.ajax({
+        type: "GET",
+        url: "http://47.93.199.20:8081/BlockT/getuserlist?pageNo="+startIndex+"&pageSize="+pageSize,
+        data: {
+
+        },
+        dataType: "json",
+        success: function (data) {
+            console.log(data)
+            console.log("startIndex:"+startIndex+ " 长度:"+data.length)
+            if(data.length == 0){
+                window.clearInterval(varTimer); 
+                return;   
+            }
+            preIndex = startIndex;
+            startIndex+=data.length;
+            localStorage.setItem("startIndex", startIndex);
+            
+            // 缓存到本地
+            for (var i = data.length - 1; i >= 0; i--) {
+                localStorage.setItem("user_"+data[i].id, JSON.stringify(data[i]));
+                localStorage.setItem("user_"+(preIndex+i), JSON.stringify(data[i]));
+            }
+            //window.localStorage
+        }
+    });
+    },  5000)
+
+
+    // winnerList 当前抽奖的中奖者列表
+    // allWinners 之前中奖的名单
+    // animationTime 动画播放间隔时间 单位ms
+    // 返回随机名单
+    function getRoundList (winnerList,allWinners,animationTime) {
+        // body... 
+        var roundPage = 0;
+        var timePerSecond = 1000/animationTime; // 每秒滚动几组
+        var countPerSecond = timePerSecond * 6; //每秒滚动人数 每组6人
+        var totalTime = 0; //动画总时间
+        insertPos = []
+        if(winnerList.length == 1){
+            totalTime = 5+Math.round(5);
+            // insertPos.push(totalTime*timePerSecond);
+        }else{
+            totalTime = 8+Math.round(8);
+            // for (var i = winnerList.length - 1; i > 0; i--) {
+            //     insertPos.push(Math.round(totalTime*timePerSecond-1));// 随机每个中奖用户日插入种子队列的位置
+            // }
+            // insertPos.push(totalTime*timePerSecond-1);// 留一个插入最有一组
+        }
+        // console.log(insertPos);
+        var totalCount = Math.min(totalTime*countPerSecond,startIndex); 
+        if(winnerList.length == 1){
+            insertPos.push(totalCount-3);    
+        }else {
+            for (var i = winnerList.length - 1; i > 0; i--) {
+                insertPos.push( Math.ceil(Math.random()*(totalCount-3)));;// 随机每个中奖用户日插入种子队列的位置
+            }
+            insertPos.push(totalCount-3);// 留一个插入最有一组   
+        }
+        var whileIndex = 0;
+        var RoundList = [];
+        while (RoundList.length < totalCount) {
+            // 剔除以中奖的人
+            //console.log("user_"+whileIndex);
+            //console.log(localStorage.getItem("user_"+whileIndex));
+            varUserInfo = JSON.parse(localStorage.getItem("user_"+whileIndex));
+            if(varUserInfo == null){
+                console.log("user_"+whileIndex+" is Null ");
+                break;
+            }
+            //console.log(varUserInfo);
+            if(localStorage.getItem("winner_"+varUserInfo.id) != null){
+                whileIndex++;
+                continue;
+            }
+            //
+            RoundList.push(varUserInfo);
+            // 选择插入位置
+            for (var i = insertPos.length - 1; i >= 0; i--) {
+                if(RoundList.length+1 == insertPos[i]){
+                    console.log("winner insert pos:"+RoundList.length+ " insertRoundPos:"+insertPos[i]);
+                    RoundList.push(winnerList[i]);
+                }
+            }
+             whileIndex++;
+        }
+        winnerList.forEach( function(element, index) {
+            // statements
+            localStorage.setItem("winner_"+element.id,JSON.stringify(element))
+        });
+        return RoundList;
+
+    }
+
+</script>
+</html>

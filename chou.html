@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    html,body{
+        width: 100%;
+        font-size:40px;
+    }
+    #person{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        width: 100%;
+    }
+    .list{
+        margin: 0 auto;
+        width: 80%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        list-style: none;
+        text-align: center;
+    }
+    .item{
+        width: 33%;
+        height: 400px;
+
+    }
+</style>
+<body>
+    <div id="person">
+      <ul class="list">
+          <li class="item">
+              <div>1</div>
+              <div><img src="" alt=""></div>
+              <div>name</div>
+          </li> <li class="item">
+          <div>1</div>
+          <div>img</div>
+          <div>name</div>
+      </li>
+          <li class="item">
+              <div>1</div>
+              <div>img</div>
+              <div>name</div>
+          </li><li class="item">
+              <div>1</div>
+              <div>img</div>
+              <div>name</div>
+          </li>
+      </ul>
+    </div>
+    <div class="" onClick="getData(6)">开始</div>
+    <div  onClick="stop()">结束</div>
+
+</body>
+</html>
+<script src="js/jquery-2.2.1.min.js"></script>
+<script>
+    let json ;
+    let jsonNum
+    $.ajax({
+        type: "GET",
+        url: "user.json",
+        data: {
+
+        },
+        dataType: "json",
+        success: function (data) {
+            console.log(data)
+            console.log(data[0].headImg)
+            json = data;
+            jsonNum = json.length-1;
+        }
+    });
+    let oItem = $('.list')[0];
+    let str = '';
+    function getNumbei(n, m){
+        var random = Math.floor(Math.random()*(m-n+1)+n);
+        return random;
+    }
+    var timer1 ;
+    var ary
+    function getData(num) {
+        window.clearInterval(timer1);
+        timer1 =window.setInterval(function () {
+            ary = [];
+            for(let i =0;i<num;i++) {
+                let number = getNumbei(0, personNum);
+                ary.push(number)
+                str+=`<li class="item"><div>${number}</div><div><img src="${json[number].headImg}" alt=""></div><div>${json[number].name}</div></li>`
+            }
+            oItem.innerHTML = '';
+            oItem.innerHTML= str;
+            str = ''
+        },200)
+    }
+    function stop() {
+        window.clearInterval(timer1);
+        console.log(ary)
+    }
+
+</script>
